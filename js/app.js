@@ -1,8 +1,9 @@
 
 // Variables
-let qwerty = document.getElementById('qwerty');
-let phrase = document.getElementById('phrase');
+const qwerty = document.getElementById('qwerty');
+const phrase = document.getElementById('phrase');
 const buttonReset = document.querySelector('.btn__reset');
+const overlay = buttonReset.parentNode;
 const scoreBoard = document.getElementById('scoreboard');
 let missCount = 0;
 
@@ -19,11 +20,38 @@ let phrases = [
 
 //FUNCTIONS
 
+// Initializes and resets game
+const resetGame = () => {
+  // Resets Overlay
+  overlay.style.display = "none";
+  overlay.className = "start";
+
+  // Resets keyboard buttons
+  const keyboardButtons = document.querySelectorAll("button");
+  for(i = 0; i < keyboardButtons.length; i++) {
+    keyboardButtons[i].classList.remove("chosen");
+    keyboardButtons[i].disabled = false;
+  }
+
+  // Resets the phrase to blank and adds new phrase
+  phrase.innerHTML = "";
+  const phraseArray = getRandomPhraseAsArray(phrases);
+  addPhraseToDisplay(phraseArray);
+
+  // Resets the hearts images to full
+  const hearts = document.querySelectorAll(".tries");
+  for (let i=0; i < hearts.length; i++) {
+      hearts[i].children[0].src = 'images/liveHeart.png';
+  }
+
+  // Resets the missed counter back to 0
+  missCount = 0;
+}
+
 // Return a random phrase from an array
 const getRandomPhraseAsArray = arr => {
   let randomNumber = Math.floor(Math.random() * arr.length);
-  const phraseArray = arr[randomNumber].split("");
-  return phraseArray;
+  return arr[randomNumber].split("");
 }
 
 // Adds the letters of a string to the display
@@ -40,9 +68,6 @@ const addPhraseToDisplay = arr => {
   }
 }
 
-const phraseArray = getRandomPhraseAsArray(phrases);
-addPhraseToDisplay(phraseArray);
-
 // Check if a letter is in the phrase
 const checkLetter = button => {
   let lis = document.getElementsByClassName("letter");
@@ -56,40 +81,41 @@ const checkLetter = button => {
   return matchFound;
 }
 
+// Change the overlay depending on the outcome
+const changeOverlay = (result, message) => {
+  overlay.className = result;
+  overlay.children[0].textContent = message;
+  overlay.style.display = "flex";
+  buttonReset.textContent = "Try Again";
+}
+
 // Check if the game is won or lost
 const checkWin = () => {
-  var letter = document.querySelectorAll(".letter");
-  var show = document.querySelectorAll(".show");
+  const letter = document.querySelectorAll(".letter");
+  const show = document.querySelectorAll(".show");
 
   if (letter.length === show.length) {
-    const overlay = buttonReset.parentNode;
-    overlay.classList.add("win");
-    overlay.children[0].textContent = "You Won";
-    overlay.style.display = "flex";
+    changeOverlay("win", "You Won")
   }
 
   if (missCount > 4) {
-    const overlay = buttonReset.parentNode;
-    overlay.classList.add("lose");
-    overlay.children[0].textContent = "You Lost";
-    overlay.style.display = "flex";
+    changeOverlay("lose", "You Lost");
   }
 }
 
+// EVENT LISTENERS
 
-// Event Listeners
-
+// Listen for clicks on buttonReset
 buttonReset.addEventListener("click", function() {
-  const overlay = buttonReset.parentNode;
-  overlay.style.display = "none";
+  resetGame();
 })
 
-
+// Listen for clicks on the screen keyboard
 qwerty.addEventListener("click", function(e) {
   const button = e.target;
   if (button.tagName === "BUTTON") {
     button.classList.add("chosen");
-    button.disabled = "true";
+    button.disabled = true;
     const letterFound = checkLetter(button);
     if (letterFound === null) {
       // replace liveHeart with lostHeart img
