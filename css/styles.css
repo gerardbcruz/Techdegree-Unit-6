@@ -43,6 +43,8 @@ h2 {
 }
 
 button {
+  outline: none;
+  cursor: pointer;
   margin: 6px;
   border: 1px solid transparent;
   padding: .5rem 1rem;
@@ -117,6 +119,7 @@ button {
   background: #FFFFFF;
   border-radius: 5px;
   font-size: var(--font-size-medium);
+  cursor: pointer;
 }
 
 /* Overlay */
