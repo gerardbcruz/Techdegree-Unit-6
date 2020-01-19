@@ -14,10 +14,7 @@ let phrases = [
   "knock your socks off",
   "head over heels",
   "curiosity killed the cat",
-  "jack of all trades master of none",
-  "short end of the stick",
-  "every cloud has a silver lining",
-  "birds of a feather flock together"
+  "short end of the stick"
 ];
 
 //FUNCTIONS
@@ -59,11 +56,34 @@ const checkLetter = button => {
   return matchFound;
 }
 
+// Check if the game is won or lost
+const checkWin = () => {
+  var letter = document.querySelectorAll(".letter");
+  var show = document.querySelectorAll(".show");
+
+  if (letter.length === show.length) {
+    const overlay = buttonReset.parentNode;
+    overlay.classList.add("win");
+    overlay.children[0].textContent = "You Won";
+    overlay.style.display = "flex";
+  }
+
+  if (missCount > 4) {
+    const overlay = buttonReset.parentNode;
+    overlay.classList.add("lose");
+    overlay.children[0].textContent = "You Lost";
+    overlay.style.display = "flex";
+  }
+}
+
+
 // Event Listeners
+
 buttonReset.addEventListener("click", function() {
   const overlay = buttonReset.parentNode;
   overlay.style.display = "none";
 })
+
 
 qwerty.addEventListener("click", function(e) {
   const button = e.target;
@@ -83,4 +103,5 @@ qwerty.addEventListener("click", function(e) {
       missCount += 1;
     }
   }
+  checkWin();
 })
