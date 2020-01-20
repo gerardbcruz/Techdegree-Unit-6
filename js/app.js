@@ -84,7 +84,7 @@ const checkLetter = button => {
 // Change the overlay depending on the outcome
 const changeOverlay = (result, message) => {
   overlay.className = result;
-  overlay.children[0].textContent = message;
+  overlay.children[1].textContent = message;
   overlay.style.display = "flex";
   buttonReset.textContent = "Try Again";
 }
